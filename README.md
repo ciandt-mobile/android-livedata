@@ -1,5 +1,4 @@
-# android-livedata
-Live Data Samples
+# LiveData + Room Samples
 
 ```
 MIT License
