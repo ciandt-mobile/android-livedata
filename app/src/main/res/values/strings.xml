@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">LiveData Room</string>
+    <string name="simple_map">Test Simple LiveData + Map</string>
+    <string name="switchmap">Users: (switchMap)</string>
+    <string name="mediator">Mediator:</string>
+    <string name="load_remote">Load Remote</string>
+    <string name="load_database">Load Database</string>
 </resources>
