@@ -1,4 +1,15 @@
-# LiveData + Room Samples
+# LiveData Samples
+
+
+*LiveData<>*
+
+*Transformations.map()*
+
+*Transformations.switchMap()*
+
+*MediatorLiveData<>*
+
+![](https://github.com/ciandt-mobile/android-livedata/blob/master/art/sample.gif?raw=true)
 
 ```
 MIT License
