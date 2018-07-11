@@ -14,6 +14,7 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
 
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
@@ -21,10 +22,6 @@ class MainActivity : AppCompatActivity() {
         viewModel.list.observe(
             this,
             Observer { it?.let { listSize.text = "List size: ${it.size}" } })
-
-        viewModel.page.observe(
-            this,
-            Observer { it?.let { pageSize.text = "Page size: ${it.size}" } })
 
 
         addFive.setOnClickListener {
