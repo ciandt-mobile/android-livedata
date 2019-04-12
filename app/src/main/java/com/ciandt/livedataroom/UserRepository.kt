@@ -7,22 +7,43 @@ class UserRepository {
 
     private val users = listOf(User(1, "John"), User(2, "Peter"), User(3, "Mary"))
 
-    private val databaseUsers = listOf(User(1, "Lee"), User(2, "Tabler"), User(3, "Colon"))
-    private val remoteUsers = listOf(User(1, "Deena"), User(2, "Lillie"), User(3, "Kirstie"))
+    private val _databaseUsers = MutableLiveData<List<User>>()
+    private val _remoteUsers = MutableLiveData<List<User>>()
+
+    private val selectedUser = MutableLiveData<User>()
+
+    val databaseUsers: LiveData<List<User>>
+        get() = _databaseUsers
+
+    val remoteUsers: LiveData<List<User>>
+        get() = _remoteUsers
 
     fun getUser(id: Int): LiveData<User> {
-        val result = MutableLiveData<User>()
 
         val user = users.find { it.id == id }
 
         user?.let {
-            result.value = user
+            selectedUser.value = user
         }
 
-        return result
+        return selectedUser
     }
 
-    fun getDatabaseUsers() = databaseUsers
+    fun updateSelectedName(id: Int, name: String) {
 
-    fun getRemoteUsers() = remoteUsers
+        val user = users.find { it.id == id }
+
+        user?.let {
+            user.name = name
+            selectedUser.value = user
+        }
+    }
+
+    fun loadDatabaseUsers() {
+        _databaseUsers.value = listOf(User(1, "Lee"), User(2, "Tabler"), User(3, "Colon"))
+    }
+
+    fun loadRemoteUsers() {
+        _remoteUsers.value = listOf(User(1, "Deena"), User(2, "Lillie"), User(3, "Kirstie"))
+    }
 }

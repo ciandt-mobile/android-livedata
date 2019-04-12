@@ -5,44 +5,33 @@ import android.arch.lifecycle.*
 class MainViewModel : ViewModel() {
     private val repo = UserRepository()
 
-    val simple: LiveData<String> = MutableLiveData()
-
-    val map: LiveData<String> =
-        Transformations.map(simple) { "Map (Convert to upper case): ${it.toUpperCase()}" }
-
     private val userId = MutableLiveData<Int>()
 
-    val user: LiveData<User> = Transformations.switchMap(userId) {
+    private val user: LiveData<User> = Transformations.switchMap(userId) {
         repo.getUser(it)
     }
 
-    private val databaseUsers = MutableLiveData<List<User>>()
-    private val remoteUsers = MutableLiveData<List<User>>()
+    val userName: LiveData<String> = Transformations.map(user) { it.name }
 
-    val users = MediatorLiveData<List<User>>()
+    val users = MediatorLiveData<String>().apply {
 
-    private val _users = mutableListOf<User>()
-
-    init {
-        users.value = mutableListOf()
-
-        users.addSource(databaseUsers) {
-            it?.let {
-                _users.addAll(it)
-                users.value = _users
+        addSource(repo.databaseUsers) {
+            it?.let { list ->
+                value = "${list.joinToString()} ${repo.remoteUsers.value?.joinToString() ?: ""}"
             }
         }
 
-        users.addSource(remoteUsers) {
-            it?.let {
-                _users.addAll(it)
-                users.value = _users
+        addSource(repo.remoteUsers) {
+            it?.let { list ->
+                value = "${list.joinToString()} ${repo.databaseUsers.value?.joinToString() ?: ""}"
             }
         }
     }
 
-    fun setSimple() {
-        (simple as MutableLiveData).value = "It's a simple LiveData"
+    fun updateName(name: String) {
+        userId.value?.let {
+            repo.updateSelectedName(it, name)
+        }
     }
 
     fun setUserId(id: Int) {
@@ -50,10 +39,10 @@ class MainViewModel : ViewModel() {
     }
 
     fun loadDatabaseUsers() {
-        databaseUsers.value = repo.getDatabaseUsers()
+        repo.loadDatabaseUsers()
     }
 
     fun loadRemoteUsers() {
-        remoteUsers.value = repo.getRemoteUsers()
+        repo.loadRemoteUsers()
     }
 }

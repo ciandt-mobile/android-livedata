@@ -1,6 +1,5 @@
 package com.ciandt.livedataroom
 
-import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -23,20 +22,16 @@ class MainActivity : AppCompatActivity() {
         val binding =
             DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
 
-        binding.setLifecycleOwner(this)
+        binding.lifecycleOwner = this
 
         binding.viewModel = viewModel
         binding.activity = this
-
-        viewModel.users.observe(this, Observer {
-            it?.let {
-                users.text = it.joinToString()
-            }
-        })
     }
 
-    fun onClickSimple(view: View) {
-        viewModel.setSimple()
+    fun onClickUpdateName(view: View) {
+        if (newName.text.trim().isNotEmpty()) {
+            viewModel.updateName(newName.text.toString())
+        }
     }
 
     fun onUserRadioClicked(view: View) {
